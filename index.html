@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>PHP-loppuharkka</title>
+
+    <script>
+
+        function haku(kat, maxh, tunniste) {
+            //Jos parametrejä ei anneta, asetetaan null -arvon tilalle tyhjä merkkijono
+            if (kat == null) {
+                kat = "";
+            }
+            if (maxh == null) {
+                maxh = "";
+            }
+            if (tunniste == null) {
+                tunniste = "";
+            }
+
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    //Otetaan kiinni mahdollinen virhe haussa
+                    try {
+                        //var obj = JSON.parse(this.responseText);
+                        //console.log('obj', obj);
+                        document.write(this.responseText);
+                    } catch (e) {
+                        document.getElementById("tulos").innerHTML = "Hakusi ei tuottanut tulosta!";
+                    }
+                    
+                    
+                }
+            };
+            //Lähetetään parametrit rajapintaan
+            xmlhttp.open("GET", "rajapinta.php?kat=" + kat + "&maxh=" + maxh + "&tunniste=" + tunniste, true);
+            xmlhttp.send();
+
+            
+        }
+
+        
+    </script>
+
+</head>
+<body>
+    <b>Haku kategorian ja maksimihinnan mukaan. (Voit hakea molemmilla hakuparametreilla.)</b>
+
+    <form id="search" onsubmit="return false;">
+        Valitse kategoria:<br />
+        <select name="kat">
+            <option value=""></option>
+            <option value="lentokone">Lentokoneet</option>
+            <option value="auto">Autot</option>
+            <option value="vene">Veneet</option>
+        </select>
+        <br /><br />
+    
+        Syötä maksimihinta (Käytä desimaalierottimena pistettä!):<br />
+        <input type="text" name="maxh" value="" /><br /><br />
+
+        <b>Haku tuotteen Id:llä. (HUOM! Id-haku yliajaa edellisen haun!)</b><br />
+
+        Syötä tuotteen ID:<br />
+        <input type="text" name="tunniste" value="" /><br /><br />
+        <input type="submit" value="Hae" onclick="haku(kat.value, maxh.value, tunniste.value)"/>
+        <br /><br />
+    </form>
+
+    <button onclick="document.getElementById('search').reset()">Tyhjennä</button>
+
+    <br /><br />
+    
+    <div id="tulos">
+        
+    </div>
+    
+</body>
+</html>
